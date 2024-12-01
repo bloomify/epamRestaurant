@@ -4,6 +4,7 @@ import asyncio
 import os
 import zlib
 import struct
+import geohashr
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, LongType, StringType, DoubleType
 from opencage.geocoder import OpenCageGeocode, RateLimitExceededError
@@ -115,7 +116,7 @@ def fetch_udf(address):
 
 # Define a UDF to calculate geohash
 def generate_geohash(lat, lon, precision=4):
-    return geohash.encode(lat, lon, precision)
+    return geohashr.encode(lat, lon, precision)
 
 if __name__ == '__main__':
 
