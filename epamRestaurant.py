@@ -9,6 +9,7 @@ from pyspark.sql.types import StructType, StructField, LongType, StringType, Dou
 from opencage.geocoder import OpenCageGeocode, RateLimitExceededError
 from pyspark.sql.functions import col, udf, concat_ws, broadcast, coalesce
 
+
 SOURCE_DIR = 'C:\\EPAM\\spark\\restaurant_csv\\restaurant_csv'
 BADRECORDS_DIR = 'C:\\EPAM\\spark\\restaurant_csv\\badrecords'
 GEOCODER_KEY = 'fc7131c342ad4eeaa10c6fd1f7fc8540'
@@ -79,10 +80,15 @@ def read_from_csvfiles(spark, source_dir, badrecords_dir):
 
     # drop unused columns
     result_df = result_df.drop("updated_lat", "updated_lng")
-    result_df.show(n = 5, truncate=False)
 
     #result_df.filter(col("id") == "85899345920").show()
     print('The total number of rows: ' + str(result_df.count()))
+
+    geohash_udf = udf(lambda lat, lon: generate_geohash(lat, lon), StringType())
+
+    result_df_geohash = result_df.withColumn("geohash", geohash_udf("lat", "lng"))
+
+    result_df_geohash.show(n=5, truncate=False)
 
 # Fetching geocodedata from OpenCage Service
 def fetch_geocodedata_byaddress(qaddress):
@@ -107,6 +113,10 @@ def fetch_udf(address):
     lng, lat = fetch_geocodedata_byaddress(address)
     return {"lat": lat, "lng": lng}
 
+# Define a UDF to calculate geohash
+def generate_geohash(lat, lon, precision=4):
+    return geohash.encode(lat, lon, precision)
+
 if __name__ == '__main__':
 
     print('Apache Spark task...')
@@ -118,6 +128,7 @@ if __name__ == '__main__':
     spark = SparkSession.builder \
             .appName('RestaurantTask') \
             .getOrCreate()
+
 
     # reduce the number of partitions to avoid unnecessary overhead for shuffle operation.
     # Set to 8 based on os.cpu_count()
