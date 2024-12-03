@@ -130,13 +130,14 @@ def read_weather_files_populatewithdata(spark, source_dir, rest_df, result_dir):
     #print('The total number of rows: ' + str(weather_df.count()))
 
     # !using Pandas_UDF took a longer time than Row-based UDF
-    # @pandas_udf("string")
-    # def compute_geohash(lat_series: pd.Series, lon_series: pd.Series) -> pd.Series:
-    #     # Use geohashr to encode latitude and longitude with precision 4
-    #     return lat_series.combine(lon_series, lambda lat, lon: geohashr.encode(lat, lon, 4))
-    #
-    # # Add the geohash column using the Pandas UDF
-    # df = df.withColumn("geohash", compute_geohash(df["lat"], df["lng"]))
+    #@pandas_udf("string")
+    #def compute_geohash(lat_series: pd.Series, lon_series: pd.Series) -> pd.Series:
+    #    # Use geohashr to encode latitude and longitude with precision 4
+    #    return lat_series.combine(lon_series, lambda lat, lon: generate_geohash(lat, lon))
+
+    # Add the geohash column using the Pandas UDF
+    #weather_df = weather_df.withColumn("geohash", compute_geohash(weather_df["lat"], weather_df["lng"]))
+
     geohash_udf = udf(lambda lat, lon: generate_geohash(lat, lon), StringType())
     weather_df = weather_df.withColumn("geohash", geohash_udf("lat", "lng"))
 
