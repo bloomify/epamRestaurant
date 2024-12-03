@@ -18,8 +18,6 @@ BADRECORDS_DIR = 'C:\\EPAM\\spark\\restaurant_csv\\badrecords'
 WEATHER_SOURCE_DIR='C:\EPAM\spark\weather\weather'
 JOINEDRESULT_DIR='file:///C:/EPAM/spark/joinedresult'
 GEOCODER_KEY = 'fc7131c342ad4eeaa10c6fd1f7fc8540'
-MAX_ITEMS = 100   # Set to 0 for unlimited
-NUM_WORKERS = 3   # For 10 requests per second try 2-5
 
 
 
