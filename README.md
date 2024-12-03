@@ -1,8 +1,9 @@
-This project reads data from:
-1) restaurant data from CSV files
-2) weather data from Parquet files
-populates the restaurant data with location information and joins with the weather data.
-The joined data will be saved in Parquet files.
+This project contains of the following steps:
+1) reads restaurant data from CSV files
+2) reads weather data from Parquet files
+3) populates the restaurant data with location information
+4) joins the restaurant data with the weather data
+5) the joined data is saved in Parquet files.
 
    
 The entrance point for this project is epamRestaurant.py file.
